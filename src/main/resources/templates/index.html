@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Generator</title>
+    <style>
+        /* Estilos para centralizar verticalmente e horizontalmente */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Resto dos estilos permanece o mesmo */
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #numero-retornado {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Number Generator</h1>
+    
+    <label for="numero">Casas Decimais:</label>
+    <input type="number" id="numero">
+    
+    <button id="gerar">Gerar</button>
+  
+    <p id="numero-retornado">Número retornado: <span>0</span></p>
+
+    <script>
+        document.getElementById('gerar').addEventListener('click', function() {
+            const valorDigitado = document.getElementById('numero').value;
+            
+            fetch('http://localhost:8080/number', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ number: parseInt(valorDigitado) })
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data == null) {
+                    alert('O retorno do endpoint é nulo. Por favor, mude as casas decimais.');
+                } else {
+                    document.querySelector('#numero-retornado span').textContent = data;
+                }
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro ao chamar o endpoint:', error);
+            });
+        });
+    </script>
+</body>
+</html>
